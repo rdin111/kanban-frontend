@@ -1,9 +1,7 @@
-// src/redux/boardSlice.ts
-
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
-import type { IBoard, ITask, PaginatedBoardsResult } from '../types';
-// Import the thunks from the new file
+// Add IColumn and update the import path
+import type { IBoard, ITask, IColumn, PaginatedBoardsResult } from '../types';
 import { fetchBoards, createBoardThunk, fetchBoardById } from './boardThunks';
 
 interface BoardState {
@@ -71,11 +69,13 @@ const boardSlice = createSlice({
                 }
             }
         },
+        // This reducer is no longer strictly necessary if you refetch the board,
+        // but it's good practice to keep it for potential future optimizations.
         addColumnToBoard: (state, action: PayloadAction<{ newColumn: IColumn }>) => {
             if (state.currentBoard) {
                 state.currentBoard.columns.push(action.payload.newColumn);
             }
-        }
+        },
     },
     extraReducers: (builder) => {
         builder
@@ -113,6 +113,7 @@ export const {
     updateTaskInColumn,
     removeTaskFromColumn,
     moveTaskInBoard,
+    addColumnToBoard,
 } = boardSlice.actions;
 
 export default boardSlice.reducer;
