@@ -4,40 +4,23 @@ import AppLoader from "./components/AppLoader";
 import LoginPage from "./pages/LoginPage";
 import DashboardPage from "./pages/DashboardPage";
 import BoardPage from "./pages/BoardPage";
-import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
     return (
         <BrowserRouter>
-            {/* Checks for an existing session before any page renders */}
             <AppLoader>
                 <Routes>
-                    {/* Root → /login */}
-                    <Route path="/" element={<Navigate to="/login" replace />} />
-
-                    {/* Public */}
+                    <Route path="/" element={<Navigate to="/dashboard" replace />} />
                     <Route path="/login" element={<LoginPage />} />
-
-                    {/* Protected routes */}
                     <Route
                         path="/dashboard"
-                        element={
-                            <ProtectedRoute>
-                                <DashboardPage />
-                            </ProtectedRoute>
-                        }
+                        element={<DashboardPage />}
                     />
                     <Route
                         path="/board/:boardId"
-                        element={
-                            <ProtectedRoute>
-                                <BoardPage />
-                            </ProtectedRoute>
-                        }
+                        element={<BoardPage />}
                     />
-
-                    {/* Catch-all */}
-                    <Route path="*" element={<Navigate to="/login" replace />} />
+                    <Route path="*" element={<Navigate to="/dashboard" replace />} />
                 </Routes>
             </AppLoader>
         </BrowserRouter>

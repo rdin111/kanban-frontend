@@ -4,9 +4,12 @@ import { useState } from 'react';
 import type { DragEndEvent, DragStartEvent } from '@dnd-kit/core';
 import type { IBoard, ITask } from '../types';
 import { moveTask } from '../services/taskService';
+import { useAppDispatch } from '../redux/hooks';
+import { moveTaskInBoard } from '../redux/boardSlice';
 
 export function useBoardDnd(currentBoard: IBoard | null) {
     const [activeTask, setActiveTask] = useState<ITask | null>(null);
+    const dispatch = useAppDispatch();
 
     function handleDragStart(event: DragStartEvent) {
         const { active } = event;
@@ -55,6 +58,14 @@ export function useBoardDnd(currentBoard: IBoard | null) {
             destIndex = overColumn.tasks.findIndex(task => task._id === overId);
         }
 
+        // Optimistically update the UI
+        dispatch(moveTaskInBoard({
+            taskId: activeId,
+            sourceColumnId: sourceColumn._id,
+            destColumnId,
+            destIndex
+        }));
+
         try {
             await moveTask(activeId, {
                 sourceColumnId: sourceColumn._id,
@@ -63,6 +74,8 @@ export function useBoardDnd(currentBoard: IBoard | null) {
             });
         } catch (err) {
             console.error("Failed to move task", err);
+            // Revert the UI change on error if necessary
+            // This would require a more complex implementation to undo the move
         }
     }
 

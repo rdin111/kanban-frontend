@@ -1,6 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
-// Add IColumn and update the import path
 import type { IBoard, ITask, IColumn, PaginatedBoardsResult } from '../types';
 import { fetchBoards, createBoardThunk, fetchBoardById } from './boardThunks';
 
@@ -27,7 +26,11 @@ const boardSlice = createSlice({
             if (state.currentBoard) {
                 const column = state.currentBoard.columns.find(c => c._id === columnId);
                 if (column) {
-                    column.tasks.push(task);
+                    // Prevent adding duplicate tasks
+                    const taskExists = column.tasks.some(t => t._id === task._id);
+                    if (!taskExists) {
+                        column.tasks.push(task);
+                    }
                 }
             }
         },
@@ -69,8 +72,6 @@ const boardSlice = createSlice({
                 }
             }
         },
-        // This reducer is no longer strictly necessary if you refetch the board,
-        // but it's good practice to keep it for potential future optimizations.
         addColumnToBoard: (state, action: PayloadAction<{ newColumn: IColumn }>) => {
             if (state.currentBoard) {
                 state.currentBoard.columns.push(action.payload.newColumn);

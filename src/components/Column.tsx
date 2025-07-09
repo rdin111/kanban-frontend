@@ -7,6 +7,7 @@ import { useAppDispatch } from '../redux/hooks';
 import { clearColumnThunk, deleteColumnThunk } from '../redux/boardThunks';
 import TaskCard from './TaskCard';
 import { createTask } from '../services/taskService';
+import { addTaskToColumn } from '../redux/boardSlice';
 
 const columnIcons: { [key: string]: React.ReactNode } = {
     'To Do': <ListTodo className="h-5 w-5" />,
@@ -28,7 +29,8 @@ function Column({ column, boardId }: ColumnProps) {
         e.preventDefault();
         if (newTaskTitle.trim()) {
             try {
-                await createTask({ title: newTaskTitle, boardId, columnId: column._id });
+                const newTask = await createTask({ title: newTaskTitle, boardId, columnId: column._id });
+                dispatch(addTaskToColumn({ task: newTask, columnId: column._id }));
                 setNewTaskTitle('');
             } catch (error) {
                 console.error("Failed to create task", error);
@@ -51,7 +53,6 @@ function Column({ column, boardId }: ColumnProps) {
     return (
         <div
             ref={setNodeRef}
-            // Change the default background to bg-base-100
             className={`p-2 rounded-lg w-80 flex-shrink-0 flex flex-col min-h-96 transition-colors duration-200 ${
                 isOver ? 'bg-base-300' : 'bg-base-100'
             }`}
