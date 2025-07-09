@@ -9,8 +9,12 @@ function LoginPage() {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
 
+    // Get the base URL for the API from environment variables
+    const apiUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5001';
+
     const handleGoogleLogin = () => {
-        window.location.href = 'http://localhost:5001/api/auth/google';
+        // Construct the full URL using the environment variable
+        window.location.href = `${apiUrl}/api/auth/google`;
     };
 
     const handleDemoLogin = async () => {
