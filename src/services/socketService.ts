@@ -1,5 +1,3 @@
-// src/services/socketService.ts
-
 import { io, Socket } from 'socket.io-client';
 import type { ITask } from '../types';
 import { store } from '../redux/store';
@@ -13,8 +11,13 @@ import {
 let socket: Socket;
 
 export const initSocket = () => {
-    const socketUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5001';
-    socket = io(socketUrl);
+    // In your deployed environment, VITE_SOCKET_URL should be set to your backend's base URL:
+    // e.g. https://kanban-backend-ti1r.onrender.com
+    const socketUrl = import.meta.env.VITE_SOCKET_URL || 'http://localhost:5001';
+
+    socket = io(socketUrl, {
+        withCredentials: true,
+    });
 
     socket.on('connect', () => console.log('🔌 Socket connected:', socket.id));
     socket.on('disconnect', () => console.log('Socket disconnected'));
