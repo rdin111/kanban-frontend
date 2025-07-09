@@ -1,13 +1,20 @@
-import { Routes, Route } from 'react-router-dom';
+// src/Router.tsx
+import { Routes, Route, Navigate } from 'react-router-dom';
 import LoginPage from './pages/LoginPage';
 import DashboardPage from './pages/DashboardPage';
 import BoardPage from './pages/BoardPage';
 import ProtectedRoute from './components/ProtectedRoute';
 
-function Router() {
+export default function Router() {
     return (
         <Routes>
-            <Route path="/" element={<LoginPage />} />
+            {/* Root always goes to /login */}
+            <Route path="/" element={<Navigate to="/login" replace />} />
+
+            {/* Public login page */}
+            <Route path="/login" element={<LoginPage />} />
+
+            {/* Protected dashboard */}
             <Route
                 path="/dashboard"
                 element={
@@ -16,6 +23,8 @@ function Router() {
                     </ProtectedRoute>
                 }
             />
+
+            {/* Protected single-board view */}
             <Route
                 path="/board/:boardId"
                 element={
@@ -24,8 +33,9 @@ function Router() {
                     </ProtectedRoute>
                 }
             />
+
+            {/* Fallback for anything else */}
+            <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>
     );
 }
-
-export default Router;
