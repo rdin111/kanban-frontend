@@ -1,7 +1,5 @@
-// src/pages/DashboardPage.tsx
-
 import { useEffect, useState } from 'react';
-import { Plus } from 'lucide-react'; // Import the icon
+import { Plus } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import CreateBoardModal from '../components/CreateBoardModal';
 import BoardList from '../components/BoardList';
@@ -14,6 +12,7 @@ function DashboardPage() {
     const [isModalOpen, setModalOpen] = useState(false);
 
     useEffect(() => {
+        // We only need to fetch if the data has never been loaded.
         if (status === 'idle') {
             dispatch(fetchBoards());
         }
@@ -25,7 +24,8 @@ function DashboardPage() {
     };
 
     let content;
-    if (status === 'loading') {
+    // Treat the 'idle' state the same as 'loading'
+    if (status === 'loading' || status === 'idle') {
         content = <div className="flex justify-center p-8"><span className="loading loading-lg"></span></div>;
     } else if (status === 'succeeded') {
         content = <BoardList boards={boards} />;
@@ -40,7 +40,7 @@ function DashboardPage() {
                 <div className="flex justify-between items-center mb-6">
                     <h1 className="text-2xl font-bold">Your Boards</h1>
                     <button className="btn btn-primary" onClick={() => setModalOpen(true)}>
-                        <Plus className="h-4 w-4" /> {/* Add the icon here */}
+                        <Plus className="h-4 w-4" />
                         Create New Board
                     </button>
                 </div>
