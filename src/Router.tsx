@@ -1,9 +1,8 @@
-// src/Router.tsx
-import { Routes, Route, Navigate } from 'react-router-dom';
-import LoginPage from './pages/LoginPage';
-import DashboardPage from './pages/DashboardPage';
-import BoardPage from './pages/BoardPage';
-import ProtectedRoute from './components/ProtectedRoute';
+import { Routes, Route, Navigate } from "react-router-dom";
+import LoginPage from "./pages/LoginPage";
+import DashboardPage from "./pages/DashboardPage";
+import BoardPage from "./pages/BoardPage";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 export default function Router() {
     return (
@@ -34,7 +33,7 @@ export default function Router() {
                 }
             />
 
-            {/* Fallback for anything else */}
+            {/* Anything else → /login */}
             <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>
     );

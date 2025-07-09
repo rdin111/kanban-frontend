@@ -1,12 +1,10 @@
 import { Navigate } from "react-router-dom";
 import { useAppSelector } from "../redux/hooks";
 
-type ProtectedRouteProps = {
-    children: React.ReactNode;
-};
+type ProtectedRouteProps = { children: React.ReactNode };
 
 function ProtectedRoute({ children }: ProtectedRouteProps) {
-    const { isAuthenticated, status } = useAppSelector((state) => state.auth);
+    const { isAuthenticated, status } = useAppSelector((s) => s.auth);
 
     // Show a spinner while the first auth check runs.
     if (status === "loading" || status === "idle") {
@@ -17,10 +15,8 @@ function ProtectedRoute({ children }: ProtectedRouteProps) {
         );
     }
 
-    // If the user isn’t logged in, send them to /login (not /).
-    if (!isAuthenticated) {
-        return <Navigate to="/login" replace />;
-    }
+    // If the user isn’t logged in, send them to /login.
+    if (!isAuthenticated) return <Navigate to="/login" replace />;
 
     // Otherwise render the protected page.
     return <>{children}</>;
