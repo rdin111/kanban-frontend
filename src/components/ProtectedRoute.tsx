@@ -6,11 +6,11 @@ type ProtectedRouteProps = {
 };
 
 function ProtectedRoute({ children }: ProtectedRouteProps) {
-    // Get both isAuthenticated and the new status
     const { isAuthenticated, status } = useAppSelector((state) => state.auth);
 
-    // While the initial auth check is loading, show a full-screen spinner
-    if (status === 'loading') {
+    // The key change is here:
+    // Treat the initial 'idle' state as a loading state as well.
+    if (status === 'loading' || status === 'idle') {
         return (
             <div className="flex justify-center items-center h-screen">
                 <span className="loading loading-lg"></span>
@@ -18,12 +18,12 @@ function ProtectedRoute({ children }: ProtectedRouteProps) {
         );
     }
 
-    // After the check is done, if the user is not authenticated, redirect
+    // After the check is complete, if the user is not authenticated, redirect.
     if (!isAuthenticated) {
         return <Navigate to="/" replace />;
     }
 
-    // If the check is done and the user is authenticated, render the children
+    // If the check is complete and the user is authenticated, show the page.
     return <>{children}</>;
 }
 
