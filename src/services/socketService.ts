@@ -13,7 +13,8 @@ import {
 let socket: Socket;
 
 export const initSocket = () => {
-    socket = io('http://localhost:5001');
+    const socketUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5001';
+    socket = io(socketUrl);
 
     socket.on('connect', () => console.log('🔌 Socket connected:', socket.id));
     socket.on('disconnect', () => console.log('Socket disconnected'));
