@@ -1,5 +1,5 @@
-import { Navigate } from 'react-router-dom';
-import { useAppSelector } from '../redux/hooks';
+import { Navigate } from "react-router-dom";
+import { useAppSelector } from "../redux/hooks";
 
 type ProtectedRouteProps = {
     children: React.ReactNode;
@@ -8,22 +8,21 @@ type ProtectedRouteProps = {
 function ProtectedRoute({ children }: ProtectedRouteProps) {
     const { isAuthenticated, status } = useAppSelector((state) => state.auth);
 
-    // The key change is here:
-    // Treat the initial 'idle' state as a loading state as well.
-    if (status === 'loading' || status === 'idle') {
+    // Show a spinner while the first auth check runs.
+    if (status === "loading" || status === "idle") {
         return (
             <div className="flex justify-center items-center h-screen">
-                <span className="loading loading-lg"></span>
+                <span className="loading loading-lg" />
             </div>
         );
     }
 
-    // After the check is complete, if the user is not authenticated, redirect.
+    // If the user isn’t logged in, send them to /login (not /).
     if (!isAuthenticated) {
-        return <Navigate to="/" replace />;
+        return <Navigate to="/login" replace />;
     }
 
-    // If the check is complete and the user is authenticated, show the page.
+    // Otherwise render the protected page.
     return <>{children}</>;
 }
 
